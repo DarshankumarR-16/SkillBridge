@@ -1,0 +1,153 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Teams | SkillBridge{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+
+    <div class="mb-4">
+        <h2>My Teams</h2>
+        <p class="text-muted">
+            View your teams and track the status of your join requests.
+        </p>
+    </div>
+
+    <!-- Teams where you are a leader or approved member -->
+    <section class="mb-5">
+        <h4 class="mb-3">Teams I'm In</h4>
+
+        {% if my_teams %}
+        <div class="row">
+            {% for team, project, membership in my_teams %}
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+
+                        <h5 class="card-title">{{ team.name }}</h5>
+
+                        <p class="text-muted">
+                            {{ team.description or "No description provided." }}
+                        </p>
+
+                        <p>
+                            <strong>Project:</strong>
+                            {{ project.title if project else "Not specified" }}
+                        </p>
+
+                        <p>
+                            <strong>Your role:</strong>
+                            {{ membership.role|title }}
+                        </p>
+
+                        <p>
+                            <strong>Team size limit:</strong>
+                            {{ team.max_members }}
+                        </p>
+
+                        <a href="{{ url_for('auth.team_members', team_id=team.id) }}"
+                           class="btn btn-outline-primary btn-sm">
+                            View Members
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            You haven't joined any teams yet.
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Join request history -->
+    <section>
+        <h4 class="mb-3">My Join Requests</h4>
+
+        {% if my_requests %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Team</th>
+                        <th>Project</th>
+                        <th>Requested On</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for join_request, team, project in my_requests %}
+                    <tr>
+                        <td>{{ team.name }}</td>
+
+                        <td>
+                            {{ project.title if project else "Not specified" }}
+                        </td>
+
+                        <td>
+                            {% if join_request.requested_at %}
+                                {{ join_request.requested_at.strftime("%d %b %Y") }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if join_request.status == "approved" %}
+                                <span class="badge bg-success">Approved</span>
+
+                            {% elif join_request.status == "rejected" %}
+                                <span class="badge bg-danger">Rejected</span>
+
+                            {% elif join_request.status == "withdrawn" %}
+                                <span class="badge bg-secondary">Withdrawn</span>
+
+                            {% elif join_request.status == "pending" %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+
+                                <form method="POST"
+                                      action="{{ url_for('auth.withdraw_team_request',
+                                                         team_id=team.id,
+                                                         request_id=join_request.id) }}"
+                                      class="mt-2">
+
+                                    <input type="hidden"
+                                           name="csrf_token"
+                                           value="{{ csrf_token() }}">
+
+                                    <button type="submit"
+                                            class="btn btn-outline-danger btn-sm"
+                                            onclick="return confirm('Are you sure you want to withdraw this join request?');">
+                                        Withdraw Request
+                                    </button>
+                                </form>
+
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    {{ join_request.status|title }}
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-secondary">
+            You haven't submitted any join requests yet.
+        </div>
+        {% endif %}
+    </section>
+
+    <div class="mt-4">
+        <a href="{{ url_for('auth.teams') }}" class="btn btn-primary">
+            Browse Teams
+        </a>
+    </div>
+
+</div>
+{% endblock %}

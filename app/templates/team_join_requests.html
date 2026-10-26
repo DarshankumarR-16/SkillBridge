@@ -1,0 +1,113 @@
+
+{% extends "base.html" %}
+
+{% block title %}Join Requests | SkillBridge{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+
+    <a href="{{ url_for('auth.teams') }}"
+       class="btn btn-outline-secondary btn-sm mb-3">
+        &larr; Back to Teams
+    </a>
+
+    <h2>Join Requests</h2>
+    <h5 class="text-muted">{{ team.name }}</h5>
+    <p>Review students who want to join your team.</p>
+
+    {% if requests %}
+        <div class="row">
+            {% for join_request, student in requests %}
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                {{ student.name }}
+                            </h5>
+
+                            <p class="mb-2">
+                                <strong>Email:</strong>
+                                {{ student.email }}
+                            </p>
+
+                            <p class="mb-2">
+                                <strong>Message:</strong>
+                                {{ join_request.message or "No message provided." }}
+                            </p>
+
+                            <p class="mb-3">
+                                <strong>Request status:</strong>
+
+                                {% if join_request.status == "pending" %}
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
+                                {% elif join_request.status == "approved" %}
+                                    <span class="badge bg-success">
+                                        Approved
+                                    </span>
+                                {% elif join_request.status == "rejected" %}
+                                    <span class="badge bg-danger">
+                                        Rejected
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        {{ join_request.status|title }}
+                                    </span>
+                                {% endif %}
+                            </p>
+
+                            {% if join_request.status == "pending" %}
+                                <div class="d-flex gap-2">
+
+                                    <form method="POST"
+                                          action="{{ url_for('auth.review_team_request',
+                                                             team_id=team.id,
+                                                             request_id=join_request.id,
+                                                             action='approve') }}">
+
+                                        <input type="hidden"
+                                               name="csrf_token"
+                                               value="{{ csrf_token() }}">
+
+                                        <button type="submit"
+                                                class="btn btn-success btn-sm"
+                                                onclick="return confirm('Approve this join request?');">
+                                            Approve
+                                        </button>
+                                    </form>
+
+                                    <form method="POST"
+                                          action="{{ url_for('auth.review_team_request',
+                                                             team_id=team.id,
+                                                             request_id=join_request.id,
+                                                             action='reject') }}">
+
+                                        <input type="hidden"
+                                               name="csrf_token"
+                                               value="{{ csrf_token() }}">
+
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Reject this join request?');">
+                                            Reject
+                                        </button>
+                                    </form>
+
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            No pending join requests for this team yet.
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

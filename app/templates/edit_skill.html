@@ -1,0 +1,68 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <h2>Edit Skill</h2>
+            <p class="text-muted">
+                Update your proficiency level for {{ skill.name }}.
+            </p>
+
+            <form method="POST"
+                  action="{{ url_for('auth.edit_skill', skill_id=skill.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-3">
+                    <label class="form-label">Skill</label>
+                    <input type="text"
+                           class="form-control"
+                           value="{{ skill.name }} ({{ skill.category }})"
+                           readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label for="proficiency_level" class="form-label">
+                        Proficiency Level
+                    </label>
+
+                    <select class="form-select"
+                            id="proficiency_level"
+                            name="proficiency_level"
+                            required>
+                        <option value="1"
+                            {% if user_skill.proficiency_level == 1 %}selected{% endif %}>
+                            1 - Beginner
+                        </option>
+                        <option value="2"
+                            {% if user_skill.proficiency_level == 2 %}selected{% endif %}>
+                            2 - Basic
+                        </option>
+                        <option value="3"
+                            {% if user_skill.proficiency_level == 3 %}selected{% endif %}>
+                            3 - Intermediate
+                        </option>
+                        <option value="4"
+                            {% if user_skill.proficiency_level == 4 %}selected{% endif %}>
+                            4 - Advanced
+                        </option>
+                        <option value="5"
+                            {% if user_skill.proficiency_level == 5 %}selected{% endif %}>
+                            5 - Expert
+                        </option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Save Changes
+                </button>
+
+                <a href="{{ url_for('auth.skills') }}"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

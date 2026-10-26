@@ -1,0 +1,177 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Skills | SkillBridge{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+
+    <div class="mb-4">
+        <h2>My Skills</h2>
+        <p class="text-muted">
+            Add your skills and select your proficiency level.
+        </p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show"
+                     role="alert">
+                    {{ message }}
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Add a skill -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body p-4">
+            <h4 class="mb-3">Add a Skill</h4>
+
+            {% if available_skills %}
+                <form method="POST"
+                      action="{{ url_for('auth.add_skill') }}">
+
+                    <input type="hidden"
+                           name="csrf_token"
+                           value="{{ csrf_token() }}">
+
+                    <div class="mb-3">
+                        <label for="skill_id" class="form-label">
+                            Choose a skill
+                        </label>
+
+                        <select class="form-select"
+                                id="skill_id"
+                                name="skill_id"
+                                required>
+                            <option value="">Select a skill</option>
+
+                            {% for skill in available_skills %}
+                                <option value="{{ skill.id }}">
+                                    {{ skill.name }} ({{ skill.category }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="proficiency_level"
+                               class="form-label">
+                            Proficiency Level
+                        </label>
+
+                        <select class="form-select"
+                                id="proficiency_level"
+                                name="proficiency_level"
+                                required>
+                            <option value="1">1 - Beginner</option>
+                            <option value="2">2 - Basic</option>
+                            <option value="3">3 - Intermediate</option>
+                            <option value="4">4 - Advanced</option>
+                            <option value="5">5 - Expert</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Add Skill
+                    </button>
+                </form>
+            {% else %}
+                <p class="mb-0">
+                    You have already added all available skills.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Existing skills -->
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <h4 class="mb-3">My Added Skills</h4>
+
+            {% if user_skills %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Skill</th>
+                                <th>Category</th>
+                                <th>Proficiency</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for user_skill, skill in user_skills %}
+                                <tr>
+                                    <td>{{ skill.name }}</td>
+                                    <td>{{ skill.category }}</td>
+
+                                    <td>
+                                        <span class="badge text-bg-primary">
+                                            {{ user_skill.proficiency_level }}/5
+                                        </span>
+
+                                        {% if user_skill.proficiency_level == 1 %}
+                                            Beginner
+                                        {% elif user_skill.proficiency_level == 2 %}
+                                            Basic
+                                        {% elif user_skill.proficiency_level == 3 %}
+                                            Intermediate
+                                        {% elif user_skill.proficiency_level == 4 %}
+                                            Advanced
+                                        {% else %}
+                                            Expert
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        <a href="{{ url_for('auth.edit_skill', skill_id=user_skill.skill_id) }}"
+                                           class="btn btn-sm btn-outline-primary me-1">
+                                            Edit
+                                        </a>
+
+                                        <form method="POST"
+                                              action="{{ url_for('auth.delete_skill', skill_id=user_skill.skill_id) }}"
+                                              class="d-inline"
+                                              onsubmit="return confirm('Are you sure you want to remove this skill?');">
+
+                                            <input type="hidden"
+                                                   name="csrf_token"
+                                                   value="{{ csrf_token() }}">
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">
+                    You haven't added any skills yet. Use the form above
+                    to add your first skill.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{{ url_for('index') }}"
+           class="btn btn-outline-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{% endblock %}

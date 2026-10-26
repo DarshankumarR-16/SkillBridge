@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets and local settings
+.env
+
+# Editors / operating system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs and local databases
+*.log
+instance/
+*.sqlite
+*.db
+
+# Build artefacts
+build/
+dist/
+*.egg-info/

@@ -1,0 +1,84 @@
+
+{% extends "base.html" %}
+
+{% block title %}Edit Profile | SkillBridge{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+
+            <h2 class="mb-3">Edit My Profile</h2>
+            <p class="text-muted">
+                Update your personal and educational information.
+            </p>
+
+            <form method="POST" action="{{ url_for('auth.edit_profile') }}">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="name"
+                        name="name"
+                        value="{{ request.form.get('name', user.name) }}"
+                        maxlength="100"
+                        required
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label for="bio" class="form-label">About Me</label>
+                    <textarea
+                        class="form-control"
+                        id="bio"
+                        name="bio"
+                        rows="4"
+                        placeholder="Write a short introduction about yourself"
+                    >{{ request.form.get('bio', profile.bio if profile else '') }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="education" class="form-label">Education</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="education"
+                        name="education"
+                        value="{{ request.form.get('education', profile.education if profile else '') }}"
+                        maxlength="150"
+                        placeholder="Example: BE Computer Science Engineering"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label for="interests" class="form-label">Interests</label>
+                    <textarea
+                        class="form-control"
+                        id="interests"
+                        name="interests"
+                        rows="3"
+                        placeholder="Example: Python, web development, AI, teamwork"
+                    >{{ request.form.get('interests', profile.interests if profile else '') }}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Save Changes
+                </button>
+
+                <a href="{{ url_for('auth.profile') }}"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

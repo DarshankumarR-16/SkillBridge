@@ -1,0 +1,15 @@
+:root { --sb-navy: #12264a; --sb-blue: #2563eb; --sb-pale: #eff6ff; }
+body { color: #172033; background: #fff; }
+.sb-navbar { background: var(--sb-navy); }
+.hero { background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 100%); }
+.sb-highlight { color: var(--sb-blue); }
+.py-lg-6 { padding-top: 5rem; padding-bottom: 5rem; }
+.preview-card { background: white; border: 1px solid #e3eaf5; border-radius: 1.25rem; padding: 1.75rem; }
+.status-dot { width: 12px; height: 12px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 5px #dcfce7; }
+.skill-row { margin-top: 1.25rem; font-size: .95rem; }
+.skill-row .progress { height: 8px; margin-top: .5rem; background: #e8eef8; }
+.skill-row .progress-bar { background: var(--sb-blue); border-radius: 8px; }
+.feature-card { border: 1px solid #e5eaf2; border-radius: 1rem; padding: 1.5rem; transition: transform .15s ease, box-shadow .15s ease; }
+.feature-card:hover { transform: translateY(-3px); box-shadow: 0 .75rem 1.5rem rgba(18, 38, 74, .08); }
+.feature-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: .8rem; color: var(--sb-blue); background: var(--sb-pale); font-weight: 800; margin-bottom: 1rem; }
+footer { background: #fbfcfe; }

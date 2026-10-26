@@ -1,0 +1,46 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+
+            <h2 class="mb-3">My Student Profile</h2>
+            <p class="text-muted">
+                View your personal and educational information.
+            </p>
+
+            <hr>
+
+            <h5>Full Name</h5>
+            <p>{{ user.name }}</p>
+
+            <h5>Email Address</h5>
+            <p>{{ user.email }}</p>
+
+            <h5>Education</h5>
+            <p>{{ profile.education if profile and profile.education else "Not added yet" }}</p>
+
+            <h5>About Me</h5>
+            <p>{{ profile.bio if profile and profile.bio else "Not added yet" }}</p>
+
+            <h5>Interests</h5>
+            <p>{{ profile.interests if profile and profile.interests else "Not added yet" }}</p>
+
+            <hr>
+
+            <a href="{{ url_for('auth.edit_profile') }}"
+               class="btn btn-primary">
+                Edit Profile
+            </a>
+
+            <a href="{{ url_for('index') }}"
+               class="btn btn-outline-secondary">
+                Back to Home
+            </a>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,138 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description"
+          content="SkillBridge helps students connect skills to software projects.">
+
+    <title>{% block title %}SkillBridge{% endblock %}</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        href="{{ url_for('static', filename='css/style.css') }}"
+        rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark sb-navbar">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold"
+           href="{{ url_for('index') }}">
+            SkillBridge
+        </a>
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#skillBridgeNavbar"
+                aria-controls="skillBridgeNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="skillBridgeNavbar">
+
+            <div class="navbar-nav me-auto mt-2 mt-lg-0">
+                {% if session.get('user_id') %}
+
+                    <a class="nav-link"
+                       href="{{ url_for('auth.profile') }}">
+                        My Profile
+                    </a>
+
+                    <a class="nav-link"
+                       href="{{ url_for('auth.skills') }}">
+                        My Skills
+                    </a>
+
+                    <a class="nav-link"
+                       href="{{ url_for('auth.learning_resources') }}">
+                        Learning Resources
+                    </a>
+
+                    <a class="nav-link"
+                       href="{{ url_for('auth.project_recommendations') }}">
+                        Project Recommendations
+                    </a>
+
+                    <a class="nav-link"
+                       href="{{ url_for('auth.teams') }}">
+                        Team Collaboration
+                    </a>
+
+                    <a class="nav-link"
+                       href="{{ url_for('auth.my_teams') }}">
+                        My Teams
+                    </a>
+
+                {% endif %}
+            </div>
+
+            <div class="d-flex align-items-lg-center gap-2 flex-wrap mt-3 mt-lg-0">
+
+                <span class="navbar-text text-white-50">
+                    Learn &bull; Build &bull; Collaborate
+                </span>
+
+                {% if session.get('user_id') %}
+
+                    <span class="navbar-text text-white">
+                        Hi, {{ session.get('user_name') }}
+                    </span>
+
+                    <form method="POST"
+                          action="{{ url_for('auth.logout') }}"
+                          class="m-0">
+
+                        <input type="hidden"
+                               name="csrf_token"
+                               value="{{ csrf_token() }}">
+
+                        <button type="submit"
+                                class="btn btn-outline-light btn-sm">
+                            Logout
+                        </button>
+                    </form>
+
+                {% else %}
+
+                    <a class="btn btn-outline-light btn-sm"
+                       href="{{ url_for('auth.login') }}">
+                        Login
+                    </a>
+
+                    <a class="btn btn-light btn-sm"
+                       href="{{ url_for('auth.register') }}">
+                        Register
+                    </a>
+
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="py-4 mt-5 border-top">
+    <div class="container small text-secondary">
+        SkillBridge &bull; VTU CSE Mini-Project
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
